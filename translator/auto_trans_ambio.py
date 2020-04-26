@@ -95,7 +95,6 @@ def write_to_markdown():
         else:
             md_dic[catalogue] = md_dic[catalogue] + info
 
-    print(md_dic)
     for k in md_dic.keys():
         markdown += md_dic[k]
 
