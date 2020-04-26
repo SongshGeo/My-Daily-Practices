@@ -19,7 +19,7 @@ import json
 
 springer_url = "https://link.springer.com"
 issue_url = r'https://link.springer.com/journal/13280/49/2'
-output_path = ""
+output_path = "your output path"
 
 parser = BeautifulSoup(requests.get(issue_url).content, 'html.parser')
 article_list = parser.select("h3.title")  # All articles
@@ -98,6 +98,7 @@ def write_to_markdown():
     for k in md_dic.keys():
         markdown += md_dic[k]
 
+    os.chdir(path=output_path)
     with open(issue+".md", 'w+', encoding='utf-8') as f:
         f.write(markdown)
 
