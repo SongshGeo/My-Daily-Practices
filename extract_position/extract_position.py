@@ -161,5 +161,5 @@ def convert_gps_to_address(gps):
 
 
 if __name__ == "__main__":
-    get_pic_gps("test_data/.")
+    get_pic_gps("../test_data/extract_position_test_data/.")
     pass
