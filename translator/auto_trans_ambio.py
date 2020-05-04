@@ -18,8 +18,8 @@ import random
 import json
 
 springer_url = "https://link.springer.com"
-issue_url = r'https://link.springer.com/journal/13280/49/2'
-output_path = "your output path"
+issue_url = r'https://link.springer.com/journal/13280/49/1'
+output_path = os.getcwd()
 
 parser = BeautifulSoup(requests.get(issue_url).content, 'html.parser')
 article_list = parser.select("h3.title")  # All articles
@@ -28,12 +28,16 @@ issue = parser.select("h1#title")[0].text
 
 
 def get_imformation(item):
-    title = item.select("h3.title")[0].a.string
+    title = item.select("h3.title")[0].text.replace("\n", "")
     url = springer_url + item.select("h3.title")[0].a.get('href')
     catalogue = item.select(".content-type")[0].text
     authors = re.sub(", +", ", ", item.select(".authors")[0].text.replace("\n", ""))
     content = BeautifulSoup(requests.get(url).content, 'html.parser')
-    abstract = content.find(id="Abs1-content").text.replace("\n", "")
+    abstracts = content.select("#Abs1-content")
+    if len(abstracts) == 1:
+        abstract = abstracts[0].text.replace("\n", "")
+    else:
+        abstract = "There is no accesible abstract of this article."
     dic = {
         "title": title,
         'url': url,
@@ -79,7 +83,7 @@ def translator(q):
 
 
 def write_to_markdown():
-    markdown = """# {}\n""".format(issue)
+    markdown = """# {}\n\n""".format(issue)
     md_dic = {}
 
     for item in tqdm(item_list):
@@ -87,11 +91,11 @@ def write_to_markdown():
         title, url, catalogue, authors, abstract = [dic[key] for key in ['title', 'url', 'type', 'authors', 'abstract']]
         title_ch = translator(title)
         abstract_ch = translator(abstract)
-        info = """### {title}\n##### {title_ch}\n**作者**：{authors}\n**摘要**：{abstract_ch}\n**原文链接**：{url}\n"""
+        info = """### {title}\n\n##### {title_ch}\n\n**作者**：{authors}\n\n**摘要**：{abstract_ch}\n\n**原文链接**：{url}\n\n"""
         info = info.format(title=title, title_ch=title_ch, authors=authors, abstract_ch=abstract_ch, url=url)
 
         if catalogue not in md_dic:
-            md_dic[catalogue] = """## {}\n""".format(catalogue.title()) + info
+            md_dic[catalogue] = """## {}\n\n""".format(catalogue.title()) + info
         else:
             md_dic[catalogue] = md_dic[catalogue] + info
 
