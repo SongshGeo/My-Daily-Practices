@@ -1,4 +1,9 @@
+# 测试系统样本熵方法
 # Test method of System Sample Entropy
+
+## 项目介绍
+这个项目旨在对樊博士系统样本熵方法进行测试与复现，目前还存在一些问题待进一步思考求证。
+
 original paper: copyright by Dr. Jingfang Fan, jingfang@pik-potsdam.de
 The python codes for our paper: 
 Complexity-based approach for El Niño magnitude forecasting before the spring predictability barrier
