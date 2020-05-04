@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE
+.idea/
+!/ArcGis API/.ipynb_checkpoints/
+ArcGis API/LA_Hub_Datasets/
+ArcGis API/_image_overlays/
+!/test_data/
