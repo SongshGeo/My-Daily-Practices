@@ -134,3 +134,6 @@ dmypy.json
 ArcGis API/LA_Hub_Datasets/
 ArcGis API/_image_overlays/
 !/test_data/
+
+# data
+.csv
