@@ -136,4 +136,5 @@ ArcGis API/_image_overlays/
 !/test_data/
 
 # data
-.csv
+**/*.csv
+**/*.xlsx
