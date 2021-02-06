@@ -1,9 +1,26 @@
 # config.yml example, I only use this to configure the scripts
 etl:
-  raw_data_file: "../data/train.csv"
-  processed_path: "data"
-  test_size: 0.2
-  random_state: 42
+  predict: True
+  train_data_file: "/data/train.csv"
+  test_data_file: "/data/test.csv"
   dropna_thresh: 0.85  # 阈值选取 0.85
+  output_train_file: "/data/cleaned_train.csv"
+  output_test_file: "/data/cleaned_test.csv"
+  train_features_path: "/model/train_features.pkl"
+  test_features_path: "/model/test_features.pkl"
 
   
+train:
+  input_dataset: "/data/cleaned_train.csv"
+  random_state: 1
+  output_model_path: "/model/model.pkl" 
+  input_train_features: "/model/train_features.pkl"
+  input_test_features: "/model/test_features.pkl"
+
+
+predict:
+  input_model: "/model/model.pkl"
+  input_dataset: "/data/cleaned_test.csv"
+  input_train_features: "/model/train_features.pkl"
+  input_test_features: "/model/test_features.pkl"
+  output_prediction: "/data/prediction.csv"

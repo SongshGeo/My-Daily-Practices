@@ -1,4 +1,7 @@
-import yaml,os
+import yaml, os
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
 
 path1 = os.path.dirname(__file__)  # 获取当前文件的上级目录路径，即 utiliy
 path2=os.path.dirname(path1)  # 获取文件夹的上一级目录路径，即 house-price

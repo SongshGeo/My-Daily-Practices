@@ -16,8 +16,20 @@ cur_path = os.path.dirname(os.path.realpath(__file__))
 path2=os.path.dirname(cur_path)  # 获取文件夹的上一级目录路径，即 house-price
 
 params = YamlLoad().load('etl')
-# train = pd.read_csv(params['raw_data_file'])
-train = pd.read_csv(path2+r"/data/train.csv")
+dropna_thresh = params['dropna_thresh']
+
+if params['predict']:
+    raw_data = path2+params['test_data_file']
+    output = path2+params['output_test_file']
+    output_features_path = path2+params['test_features_path']
+else:
+    raw_data = path2+params['train_data_file']
+    output = path2+params['output_train_file']
+    output_features_path = path2+params['train_features_path']
+
+
+train = pd.read_csv(raw_data)
+print("从文件读取csv: {}".format(raw_data))
 
 # 根据上述大致划分，对每个变量有一个归类
 locations = {
@@ -128,7 +140,7 @@ agg_years_remod = lambda row: row['YrSold'] - row['YearRemodAdd']
 choose_subset = pdp.PdPipeline([
     pdp.ApplyToRows(agg_years_built, colname='built_years'),  # 新增出售年月
     pdp.ApplyToRows(agg_years_remod, colname='remod_years'),
-    pdp.ColDrop(['YrSold', 'MoSold', 'YearBuilt', 'YearRemodAdd']),  # 删除原先的年月
+    pdp.ColDrop(['YrSold', 'MoSold', 'YearBuilt', 'YearRemodAdd', 'GarageYrBlt']),  # 删除原先的年月
 ])
 
 train = choose_subset(train, verbose=True)
@@ -220,10 +232,48 @@ train.isna().sum().sort_values(ascending=False).head()
 print("\n去掉缺失值之前：")
 train.shape
 
-dropna_thresh = params['dropna_thresh']
+print("\n去掉缺失值超过{}的列：".format(dropna_thresh))
 dropna_values = pdp.DropNa(axis=1, thresh=dropna_thresh*len(train))
-dropna_values += pdp.DropNa(axis=0, how='any')
+# dropna_values += pdp.DropNa(axis=0, how='any')
 train = dropna_values(train, verbose=True)
 
-print("\n去掉缺失值超过{}之后：".format(dropna_thresh))
-train.shape
+
+# 填补缺失值
+from sklearn.impute import SimpleImputer
+print("Fill na-values by mean.")
+train = pd.DataFrame(SimpleImputer().fit_transform(train.values), columns=train.columns)
+
+
+# 使用 sklearn：
+# from sklearn import preprocessing
+# preprocessing.scale()
+
+def scale(array):
+    a = array - array.mean()
+    b = array.max() - array.min()
+    return a/b
+
+datatypes = update_datatypes(train, datatypes)
+for col in datatypes['numeric']:
+    print("Applied scale for variable {}.".format(col))
+    train[col] = scale(train[col])
+
+print("处理后的文件大概长这样：")
+print(train.head())
+print(train.shape)
+
+train.to_csv(output)
+print("已经将处理后的文件存入{}".format(output))
+
+
+import pickle
+features = list(train.columns)
+not_features = ['Id', 'SalePrice']
+
+for i in not_features:
+    if i in features:
+        features.remove(i)
+
+with open(output_features_path, 'wb') as f:
+    pickle.dump(features, f)
+    print("The features saved, too.")
