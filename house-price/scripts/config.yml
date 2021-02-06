@@ -1,0 +1,9 @@
+# config.yml example, I only use this to configure the scripts
+etl:
+  raw_data_file: "../data/train.csv"
+  processed_path: "data"
+  test_size: 0.2
+  random_state: 42
+  dropna_thresh: 0.85  # 阈值选取 0.85
+
+  
