@@ -1,0 +1,4 @@
+java -cp NetworkTools.jar -Xms500m -Xmx2000m su.syseco.jnetworktools.motif.MotifComparator GaziSEN.csv GaziSENAttr.csv 1 1 1 50
+
+
+java -cp NetworkTools.jar -Xms500m -Xmx2000m su.syseco.jnetworktools.motif.MotifComparator sourcedata-with-neighbors.csv sourcedata_attr.csv 1 1 1 50
