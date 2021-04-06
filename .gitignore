@@ -138,6 +138,7 @@ ArcGis API/_image_overlays/
 # data
 **/*.csv
 **/*.xlsx
+**/*.db
 
 # DS
 **/.DS_Store
