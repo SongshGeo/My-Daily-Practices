@@ -146,3 +146,5 @@ ArcGis API/_image_overlays/
 .DS_Store
 .DS_Store
 **/*.pdf
+
+**/*.tif
